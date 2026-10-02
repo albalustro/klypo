@@ -1,0 +1,15 @@
+node_modules/
+.expo/
+dist/
+build/
+*.log
+.env
+.env.*
+!.env.example
+# Continuous Native Generation: ios/ e android/ são gerados por `expo prebuild`
+apps/mobile/ios/
+apps/mobile/android/
+supabase/.temp/
+supabase/.branches/
+.DS_Store
+coverage/
