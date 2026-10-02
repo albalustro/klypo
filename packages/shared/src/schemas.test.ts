@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { AiPageOutput, Blocks, ExtractionOutput, FinalizeRequest, SaveVersionRequest, extractUrls, toPageBlocks, validateAiPage } from "./index";
+import { AiPageOutput, Blocks, ExtractionOutput as ExtractionSchema, FinalizeRequest, SaveVersionRequest, extractUrls, toPageBlocks, validateAiPage } from "./index";
 
 const seg = (key: string, text: string) => ({ key, text });
-const ex = { legibility: "legible", language: "pt", segments: [seg("s1", "Veja https://exemplo.com/a."), seg("s2", "texto")], issues: [] } as const;
+const ex = { legibility: "legible", language: "pt", segments: [seg("s1", "Veja https://exemplo.com/a."), seg("s2", "texto")], issues: [] } as import("./index").ExtractionOutput;
 const page = (over: object = {}) => ({
   title: "T", titleIsGenerated: true, summary: "S", type: "reference", language: "pt", translatedFromSource: false,
   suggestedTopics: [], blocks: [{ type: "paragraph", text: "x", evidence: ["s1"] }], ...over,
@@ -25,10 +25,10 @@ describe("blocos", () => {
 
 describe("extração", () => {
   it("ilegível não traz segmentos; sem segmentos precisa ser ilegível; chaves únicas", () => {
-    expect(ExtractionOutput.safeParse({ ...ex, legibility: "illegible" }).success).toBe(false);
-    expect(ExtractionOutput.safeParse({ legibility: "legible", language: "pt", segments: [], issues: [] }).success).toBe(false);
-    expect(ExtractionOutput.safeParse({ legibility: "illegible", language: "und", segments: [], issues: [] }).success).toBe(true);
-    expect(ExtractionOutput.safeParse({ ...ex, segments: [seg("s1", "a"), seg("s1", "b")] }).success).toBe(false);
+    expect(ExtractionSchema.safeParse({ ...ex, legibility: "illegible" }).success).toBe(false);
+    expect(ExtractionSchema.safeParse({ legibility: "legible", language: "pt", segments: [], issues: [] }).success).toBe(false);
+    expect(ExtractionSchema.safeParse({ legibility: "illegible", language: "und", segments: [], issues: [] }).success).toBe(true);
+    expect(ExtractionSchema.safeParse({ ...ex, segments: [seg("s1", "a"), seg("s1", "b")] }).success).toBe(false);
   });
 });
 
